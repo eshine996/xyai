@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from api.deps import SessionDep
-from api.common import ResponseModel
+from schema.response import IResponse
 
 router = APIRouter(tags=["登录"])
 
@@ -12,7 +12,7 @@ class LoginReq(BaseModel):
 
 
 @router.post(path="/api/v1/login", summary="账户密码登录")
-def login_by_password(session: SessionDep, req: LoginReq) -> ResponseModel():
+def login_by_password(session: SessionDep, req: LoginReq) -> IResponse:
     # todo
     pass
 
@@ -25,6 +25,6 @@ class LoginUserInfo(BaseModel):
 
 
 @router.get(path="/api/v1/login/getUserInfo", summary="获取登录用户信息")
-def get_login_user_info(session: SessionDep) -> ResponseModel(data=LoginUserInfo):
+def get_login_user_info(session: SessionDep) -> IResponse[LoginUserInfo]:
     # todo
     pass
