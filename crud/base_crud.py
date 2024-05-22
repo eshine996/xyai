@@ -1,12 +1,18 @@
-from typing import TypeVar, Optional
+from typing import TypeVar, Optional, Generic
 from sqlmodel import SQLModel, Session, select
+from core.pgsql import get_db
+from fastapi import Depends
 
 ModelType = TypeVar("ModelType", bound=SQLModel)
 
 
-class CRUDBase:
+class CRUDBase(Generic[ModelType]):
     def __init__(self, model: type[ModelType]):
         self.model = model
+
+    @staticmethod
+    def get_db_session() -> Session:
+        return next(get_db())
 
     def get_by_id(self, db_session: Session, uid: str) -> Optional[ModelType]:
         query = select(self.model).where(self.model.id == uid)
