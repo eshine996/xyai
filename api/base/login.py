@@ -12,8 +12,13 @@ class LoginReq(BaseModel):
     password: str = Field(..., title="密码")
 
 
+class LoginResp(BaseModel):
+    token: str = Field(..., title="token")
+    expire: int = Field(..., title="过期时间")
+
+
 @router.post(path="/api/v1/login", summary="账户密码登录")
-def login_by_password(db_session: SessionDep, req: LoginReq) -> IResponse:
+def login_by_password(db_session: SessionDep, req: LoginReq) -> IResponse[LoginResp]:
     user = crud.user.get_by_username(username=req.username, db_session=db_session)
     if user is None:
         return fail_resp(msg="密码或账号错误")
