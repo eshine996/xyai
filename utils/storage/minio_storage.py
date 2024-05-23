@@ -1,8 +1,8 @@
-from base_storage import BaseStorage
+from .base_storage import Storage
 from minio import Minio
 
 
-class MinioStorage(BaseStorage):
+class MinioStorage(Storage):
     def __init__(
             self, endpoint: str, access_key: str, secret_key: str, bucket_name: str
     ):

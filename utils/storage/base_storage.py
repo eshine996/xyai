@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class BaseStorage(ABC):
+class Storage(ABC):
 
     @abstractmethod
     def save(self, filename: str, data):

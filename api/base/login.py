@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from api.deps import SessionDep
-from schema.response import IResponse, ok_resp, fail_resp
+from api.response import IResponse, ok_resp, fail_resp
 import crud
 
 router = APIRouter(tags=["登录"])
@@ -17,7 +17,7 @@ class LoginResp(BaseModel):
     expire: int = Field(..., title="过期时间")
 
 
-@router.post(path="/api/v1/login", summary="账户密码登录")
+@router.post(path="/login", summary="账户密码登录")
 def login_by_password(db_session: SessionDep, req: LoginReq) -> IResponse[LoginResp]:
     user = crud.user.get_by_username(username=req.username, db_session=db_session)
     if user is None:

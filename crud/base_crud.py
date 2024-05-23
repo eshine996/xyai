@@ -1,6 +1,5 @@
 from typing import TypeVar, Optional, Generic
 from sqlmodel import SQLModel, Session, select
-from core.pgsql import get_db
 from fastapi import Depends
 
 ModelType = TypeVar("ModelType", bound=SQLModel)

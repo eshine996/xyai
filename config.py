@@ -3,8 +3,13 @@ from pydantic import (
     PostgresDsn,
     computed_field,
 )
-
+from enum import Enum
 from pydantic_core import MultiHostUrl
+
+
+class StorageType(Enum):
+    MINIO = "minio"
+    OBS = "obs"
 
 
 class Settings(BaseSettings):
@@ -14,6 +19,7 @@ class Settings(BaseSettings):
 
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
 
+    # postgresql相关配置
     POSTGRES_SERVER: str
     POSTGRES_PORT: int
     POSTGRES_USER: str
@@ -31,6 +37,13 @@ class Settings(BaseSettings):
             port=self.POSTGRES_PORT,
             path=self.POSTGRES_DB,
         )
+
+    STORAGE_TYPE: StorageType
+    # Minio相关配置
+    MINIO_ENDPOINT: str
+    MINIO_ACCESS_KEY: str
+    MINIO_SECRET_KEY: str
+    MINIO_BUCKET_NAME: str = "xyai"
 
 
 settings = Settings()

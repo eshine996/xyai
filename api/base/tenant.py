@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Query
 from pydantic import BaseModel, Field
 from api.deps import SessionDep
-from api.common import ResponseModel
+from api.response import IResponse
 
 router = APIRouter(tags=["租户"])
 
@@ -11,7 +11,7 @@ class CreateTenantReq(BaseModel):
 
 
 @router.post(path="/api/v1/tenant/create", summary="创建租户")
-def create_tenant(session: SessionDep, req: CreateTenantReq) -> ResponseModel():
+def create_tenant(session: SessionDep, req: CreateTenantReq) -> IResponse:
     # todo
     pass
 
@@ -22,12 +22,12 @@ class TenantInfo(BaseModel):
 
 
 @router.get(path="/api/v1/tenant/getById", summary="根据租户id获取租户信息")
-def get_tenant_by_id(session: SessionDep, tenant_id: str = Query()) -> ResponseModel(data=TenantInfo):
+def get_tenant_by_id(session: SessionDep, tenant_id: str = Query()) -> IResponse:
     # todo
     pass
 
 
 @router.get(path="/api/v1/tenant/deleteById", summary="根据租户id删除租户信息")
-def del_tenant_by_id(session: SessionDep, tenant_id: str = Query()) -> ResponseModel():
+def del_tenant_by_id(session: SessionDep, tenant_id: str = Query()) -> IResponse:
     # todo
     pass
