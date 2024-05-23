@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
 
-    @computed_field  # type: ignore[misc]
+    @computed_field
     @property
     def POSTGRES_DATABASE_URI(self) -> PostgresDsn:
         return MultiHostUrl.build(
