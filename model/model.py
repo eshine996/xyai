@@ -2,7 +2,6 @@ from sqlmodel import Field, SQLModel
 from enum import Enum
 from uuid import UUID
 from datetime import datetime
-import uuid
 
 
 class DatasetType(Enum):
@@ -20,7 +19,7 @@ class Tenant(SQLModel, table=True):
 
 class User(SQLModel, table=True):
     tenant_id: str
-    user_id: str = Field(default=None, alias="id", primary_key=True)
+    user_id: str = Field(primary_key=True)
     username: str
     password: str
 
@@ -28,7 +27,7 @@ class User(SQLModel, table=True):
 class Dataset(SQLModel, table=True):
     tenant_id: str
     user_id: str
-    dataset_id: str = Field(default=None, alias="id", primary_key=True)
+    dataset_id: str = Field(primary_key=True)
     dataset_name: str
     desc: str
     dataset_type: DatasetType

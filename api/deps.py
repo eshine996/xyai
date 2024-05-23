@@ -5,13 +5,15 @@ from sqlmodel import Session
 from extension.db import get_db
 from extension.storage import get_storage
 from model import User
-from fastapi import Depends
-from extension.security import decode_access_token
+from api.token import decode_access_token
 
 
 def get_current_user(xy_ai_token: str = Header(None)) -> User:
     if not xy_ai_token:
         raise HTTPException(status_code=401, detail="unauthorized")
+    print(xy_ai_token)
+    payload = decode_access_token(xy_ai_token)
+    print(payload)
 
     return User()
 

@@ -3,6 +3,10 @@ from pydantic import BaseModel, Field
 from api.deps import SessionDep
 from api.response import IResponse, ok_resp, fail_resp
 import crud
+from extension.security import sha256_encrypt
+from api.token import TokenPayload, create_access_token
+from datetime import datetime
+from config import settings
 
 router = APIRouter(tags=["登录"])
 
@@ -20,9 +24,20 @@ class LoginResp(BaseModel):
 @router.post(path="/login", summary="账户密码登录")
 def login_by_password(db_session: SessionDep, req: LoginReq) -> IResponse[LoginResp]:
     user = crud.user.get_by_username(username=req.username, db_session=db_session)
-    if user is None:
+    if not user:
         return fail_resp(msg="密码或账号错误")
-    return ok_resp()
+
+    if user.password != sha256_encrypt(req.password):
+        return fail_resp(msg="密码或账号错误")
+
+    payload = TokenPayload(
+        user_id=str(user.user_id),
+        username=user.username,
+        exp=int(datetime.utcnow().timestamp()) + settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )
+
+    resp_data = LoginResp(token=create_access_token(payload), expire=payload.exp)
+    return ok_resp(data=resp_data)
 
 
 class LoginUserInfo(BaseModel):
