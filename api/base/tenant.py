@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Query
 from pydantic import BaseModel, Field
 from api.deps import SessionDep
-from api.response import IResponse
+from api.response import IResponse, ok_resp, fail_resp
+import crud
+from model import Tenant
 
 router = APIRouter(tags=["租户"])
 
@@ -11,14 +13,13 @@ class CreateTenantReq(BaseModel):
 
 
 @router.post(path="/api/v1/tenant/create", summary="创建租户")
-def create_tenant(session: SessionDep, req: CreateTenantReq) -> IResponse:
-    # todo
-    pass
+def create_tenant(db_session: SessionDep, req: CreateTenantReq) -> IResponse[Tenant]:
+    try:
+        _tenant = crud.tenant.create_tenant(req.tenant_name, db_session)
+    except Exception as e:
+        return fail_resp(msg="创建失败:" + str(e))
 
-
-class TenantInfo(BaseModel):
-    tenant_id: str
-    school_id: str
+    return ok_resp(data=_tenant)
 
 
 @router.get(path="/api/v1/tenant/getById", summary="根据租户id获取租户信息")

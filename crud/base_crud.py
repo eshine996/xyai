@@ -1,6 +1,7 @@
 from typing import TypeVar, Optional, Generic
 from sqlmodel import SQLModel, Session, select
 from fastapi import Depends
+from extension.db import get_db
 
 ModelType = TypeVar("ModelType", bound=SQLModel)
 

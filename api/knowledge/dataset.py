@@ -1,20 +1,19 @@
 from fastapi import APIRouter, Query
 from pydantic import BaseModel
 from api.deps import SessionDep
-from api.response import IResponse
+from api.response import IResponse, ok_resp
 
 router = APIRouter(tags=["知识库"])
 
 
 class Dataset(BaseModel):
     dataset_name: str
-    desc: str
 
 
 @router.post(path="/api/v1/dataset/create", summary="创建知识库")
 def create_dataset(session: SessionDep, req: Dataset) -> IResponse:
-    # todo
-    pass
+    print(req.dataset_name)
+    return ok_resp()
 
 
 @router.get(path="/api/v1/dataset/delete", summary="通过id删除知识库")
