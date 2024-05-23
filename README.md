@@ -5,3 +5,8 @@
 ```shell
 uvicorn main:app 
 ```
+
+# 环境
+python>3.10
+mysql>8.0
+minio

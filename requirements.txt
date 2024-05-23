@@ -4,3 +4,4 @@ pydantic~=2.7.1
 pyjwt~=2.8.0
 passlib~=1.7.4
 sqlalchemy~=2.0.30
+minio~=7.2.7
