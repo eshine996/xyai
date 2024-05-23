@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Header
 from pydantic import BaseModel, Field
 from api.deps import SessionDep
 from api.response import IResponse, ok_resp, fail_resp

@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Header, Depends
 from pydantic import BaseModel
-from api.deps import SessionDep
+from api.deps import SessionDep, TenantIdDep, CurrentUserDep
 from api.response import IResponse, ok_resp
+from model import User
 
 router = APIRouter(tags=["知识库"])
 
@@ -11,8 +12,14 @@ class Dataset(BaseModel):
 
 
 @router.post(path="/api/v1/dataset/create", summary="创建知识库")
-def create_dataset(session: SessionDep, req: Dataset) -> IResponse:
-    print(req.dataset_name)
+def create_dataset(
+        tenant_id: TenantIdDep,
+        current_user: CurrentUserDep,
+        req: Dataset,
+        session: SessionDep,
+) -> IResponse:
+    # print(req.dataset_name)
+    # print(tenant_id)
     return ok_resp()
 
 
