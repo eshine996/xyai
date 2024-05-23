@@ -1,5 +1,7 @@
 from .base_storage import Storage
 from minio import Minio
+from typing import BinaryIO
+import os
 
 
 class MinioStorage(Storage):
@@ -23,16 +25,15 @@ class MinioStorage(Storage):
             self.client.make_bucket(self.bucket_name)
         return self.bucket_name
 
-    def save(self, filename: str, data):
-        # self.client.put_object(
-        #     bucket_name=self.bucket_name,
-        #     object_name=object_name,
-        #     data=file_data,
-        #     content_type=content_type,
-        #     length=-1,
-        #     part_size=10 * 1024 * 1024,
-        # )
-        raise NotImplementedError
+    def save(self, object_name: str, file_data: BinaryIO) -> str:
+        self.client.put_object(
+            bucket_name=self.bucket_name,
+            object_name=object_name,
+            data=file_data,
+            length=-1,
+            part_size=10 * 1024 * 1024,
+        )
+        return os.path.join("http://{}".format(self.endpoint), self.bucket_name, object_name)
 
     def download(self, filename, target_filepath):
         raise NotImplementedError
