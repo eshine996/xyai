@@ -13,7 +13,7 @@ class IResponse(BaseModel, Generic[T]):
 def ok_resp(data: Any = None) -> IResponse:
     resp = IResponse(
         code=200,
-        msg="ok",
+        msg="成功",
     )
 
     if data is not None:
@@ -22,7 +22,7 @@ def ok_resp(data: Any = None) -> IResponse:
     return resp
 
 
-def fail_resp(msg: str) -> IResponse:
+def fail_resp(msg: str = "失败") -> IResponse:
     return IResponse(
         code=400,
         msg=msg
