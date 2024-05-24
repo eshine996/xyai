@@ -1,7 +1,7 @@
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, Field
 from datetime import datetime
 
 
 class TimeModel(SQLModel):
     created_at: datetime
-    deleted_at: datetime | None
+    deleted_at: datetime | None = Field(default=None)

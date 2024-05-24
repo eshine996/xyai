@@ -17,7 +17,10 @@ class DatasetBase(SQLModel):
     dataset_type: DatasetType = Field(title="类型", sa_column=Column(ChoiceType(DatasetType)))
 
 
-class Dataset(DatasetBase, TimeModel, table=True):
+class DatasetPublic(DatasetBase):
+    dataset_id: UUID = Field(primary_key=True)
+
+
+class Dataset(DatasetPublic, TimeModel, table=True):
     tenant_id: UUID
     user_id: UUID
-    dataset_id: UUID = Field(primary_key=True)

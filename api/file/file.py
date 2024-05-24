@@ -1,5 +1,5 @@
 from fastapi import APIRouter, UploadFile, File
-from api.deps import SessionDep, StorageDep
+from api.deps import StorageDep
 from pydantic import BaseModel
 from api.response import IResponse, fail_resp, ok_resp
 import os
@@ -12,7 +12,7 @@ class UploadFileResp(BaseModel):
     filepath: str
 
 
-@router.post(path="/api/v1/file/upload", summary="上传文件")
+@router.post(path="/file/upload", summary="上传文件")
 def upload_file(
         storage: StorageDep,
         file: UploadFile = File(...),
@@ -27,9 +27,3 @@ def upload_file(
         return fail_resp(msg=str(e))
 
     return ok_resp(data=UploadFileResp(filepath=filepath))
-
-
-@router.get(path="/api/v1/file/{filename}", summary="下载文件")
-def create_dataset(session: SessionDep):
-    # todo
-    pass

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Query
 import crud
 from api.deps import SessionDep, TenantIdDep, CurrentUserDep
 from api.response import IResponse, ok_resp, fail_resp
-from model.dataset import DatasetBase
+from model.dataset import DatasetBase, DatasetPublic
 
 router = APIRouter(tags=["知识库"])
 
@@ -22,7 +22,7 @@ def create_dataset(
             db_session=db_session
         )
     except Exception as e:
-        return fail_resp(msg="创建失败:" + str(e))
+        return fail_resp(msg="失败:" + str(e))
 
     return ok_resp()
 
@@ -36,13 +36,13 @@ def del_dataset_by_id(
 ) -> IResponse:
     try:
         ok = crud.dataset.delete_by_id(
+            db_session=db_session,
             tenant_id=tenant_id,
             user_id=current_user.user_id,
-            db_session=db_session,
             dataset_id=dataset_id
         )
     except Exception as e:
-        return fail_resp(msg="删除失败：" + str(e))
+        return fail_resp(msg="失败：" + str(e))
 
     if not ok:
         return fail_resp()
@@ -51,12 +51,37 @@ def del_dataset_by_id(
 
 
 @router.post(path="/api/v1/dataset/update", summary="通过id更新知识库信息")
-def del_dataset_by_id(session: SessionDep, req: DatasetBase) -> IResponse:
-    # todo
-    pass
+def update_dataset_by_id(
+        tenant_id: TenantIdDep,
+        current_user: CurrentUserDep,
+        db_session: SessionDep,
+        req: DatasetPublic
+) -> IResponse:
+    try:
+        ok = crud.dataset.update(
+            db_session=db_session,
+            tenant_id=tenant_id,
+            user_id=current_user.user_id,
+            dataset_public=req
+        )
+    except Exception as e:
+        return fail_resp(msg="失败：" + str(e))
+
+    if not ok:
+        return fail_resp()
+
+    return ok_resp()
 
 
 @router.get(path="/api/v1/dataset/list", summary="获取知识库列表")
-def del_dataset_list(session: SessionDep, req: DatasetBase) -> IResponse:
-    # todo
-    pass
+def del_dataset_list(
+        tenant_id: TenantIdDep,
+        current_user: CurrentUserDep,
+        db_session: SessionDep,
+) -> IResponse:
+    dataset_list = crud.dataset.get_list(
+        db_session=db_session,
+        tenant_id=tenant_id,
+        user_id=current_user.user_id,
+    )
+    return ok_resp(data=dataset_list)

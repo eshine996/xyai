@@ -1,17 +1,18 @@
 from crud.base_crud import CRUDBase
 from sqlmodel import Session, select
-from typing import Optional
+from typing import Optional, List
 import uuid
 from datetime import datetime
-from model.dataset import DatasetBase, Dataset
+from model.dataset import DatasetBase, Dataset, DatasetPublic
+from uuid import UUID
 
 
 class CRUDDataset(CRUDBase[Dataset]):
 
     def create_dataset(
             self,
-            tenant_id: str,
-            user_id: str,
+            tenant_id: UUID,
+            user_id: UUID,
             dataset_base: DatasetBase,
             db_session: Session
     ) -> Optional[Dataset]:
@@ -33,9 +34,9 @@ class CRUDDataset(CRUDBase[Dataset]):
     def get_by_id(
             self,
             db_session: Session,
-            tenant_id: str,
-            user_id: str,
-            dataset_id: str
+            tenant_id: UUID,
+            user_id: UUID,
+            dataset_id: UUID
     ) -> Optional[Dataset]:
         db_session = db_session or self.get_db_session()
 
@@ -43,7 +44,7 @@ class CRUDDataset(CRUDBase[Dataset]):
             self.model.tenant_id == tenant_id,
             self.model.user_id == user_id,
             self.model.dataset_id == dataset_id,
-            self.model.deleted_at is None
+            self.model.deleted_at.is_(None)
         )
 
         return db_session.exec(query).one_or_none()
@@ -51,9 +52,9 @@ class CRUDDataset(CRUDBase[Dataset]):
     def delete_by_id(
             self,
             db_session: Session,
-            tenant_id: str,
-            user_id: str,
-            dataset_id: str
+            tenant_id: UUID,
+            user_id: UUID,
+            dataset_id: UUID
     ) -> bool:
         ds = self.get_by_id(db_session, tenant_id, user_id, dataset_id)
         if ds is None:
@@ -64,6 +65,57 @@ class CRUDDataset(CRUDBase[Dataset]):
         db_session.add(ds)
         db_session.commit()
         return True
+
+    def update(
+            self,
+            db_session: Session,
+            tenant_id: UUID,
+            user_id: UUID,
+            dataset_public: DatasetPublic
+    ) -> bool:
+        ds = self.get_by_id(
+            db_session=db_session,
+            tenant_id=tenant_id,
+            user_id=user_id,
+            dataset_id=dataset_public.dataset_id
+        )
+        if ds is None:
+            return False
+
+        if dataset_public.dataset_name:
+            ds.dataset_name = dataset_public.dataset_name
+        if dataset_public.desc:
+            ds.desc = dataset_public.desc
+        if dataset_public.dataset_type:
+            ds.dataset_type = dataset_public.dataset_type
+
+        db_session.add(ds)
+        db_session.commit()
+
+        return True
+
+    def get_list(
+            self,
+            db_session: Session,
+            tenant_id: UUID,
+            user_id: UUID,
+    ) -> List[DatasetPublic]:
+        query = select(self.model).where(
+            self.model.tenant_id == tenant_id,
+            self.model.user_id == user_id,
+            self.model.deleted_at.is_(None)
+        )
+
+        results = db_session.exec(query)
+
+        return [
+            DatasetPublic(
+                dataset_id=ret.dataset_id,
+                dataset_name=ret.dataset_name,
+                desc=ret.desc,
+                dataset_type=ret.dataset_type,
+            ) for ret in results
+        ]
 
 
 dataset = CRUDDataset(Dataset)
