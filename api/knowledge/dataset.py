@@ -3,6 +3,7 @@ import crud
 from api.deps import SessionDep, TenantIdDep, CurrentUserDep
 from api.response import IResponse, ok_resp, fail_resp
 from model.dataset import DatasetBase, DatasetPublic
+from uuid import UUID
 
 router = APIRouter(tags=["知识库"])
 
@@ -32,7 +33,7 @@ def del_dataset_by_id(
         tenant_id: TenantIdDep,
         current_user: CurrentUserDep,
         db_session: SessionDep,
-        dataset_id: str = Query(),
+        dataset_id: UUID = Query(),
 ) -> IResponse:
     try:
         ok = crud.dataset.delete_by_id(
@@ -73,15 +74,46 @@ def update_dataset_by_id(
     return ok_resp()
 
 
+@router.get(path="/api/v1/dataset/getById", summary="通过id获取知识库信息")
+def get_dataset_by_id(
+        tenant_id: TenantIdDep,
+        current_user: CurrentUserDep,
+        db_session: SessionDep,
+        dataset_id: UUID = Query()
+) -> IResponse[DatasetPublic]:
+    try:
+        _dataset = crud.dataset.delete_by_id(
+            db_session=db_session,
+            tenant_id=tenant_id,
+            user_id=current_user.user_id,
+            dataset_id=dataset_id
+        )
+    except Exception as e:
+        return fail_resp(msg="失败：" + str(e))
+
+    return ok_resp(
+        data=DatasetPublic(
+            dataset_id=_dataset.dataset_id,
+            dataset_name=_dataset.dataset_name,
+            desc=_dataset.desc,
+            dataset_type=_dataset.dataset_type,
+        )
+    )
+
+
 @router.get(path="/api/v1/dataset/list", summary="获取知识库列表")
 def del_dataset_list(
         tenant_id: TenantIdDep,
         current_user: CurrentUserDep,
         db_session: SessionDep,
 ) -> IResponse:
-    dataset_list = crud.dataset.get_list(
-        db_session=db_session,
-        tenant_id=tenant_id,
-        user_id=current_user.user_id,
-    )
+    try:
+        dataset_list = crud.dataset.get_list(
+            db_session=db_session,
+            tenant_id=tenant_id,
+            user_id=current_user.user_id,
+        )
+    except Exception as e:
+        return fail_resp(msg="失败：" + str(e))
+
     return ok_resp(data=dataset_list)
