@@ -33,7 +33,7 @@ def login_by_password(db_session: SessionDep, req: LoginReq) -> IResponse[LoginR
     payload = TokenPayload(
         user_id=str(user.user_id),
         username=user.username,
-        exp=int(datetime.utcnow().timestamp()) + settings.ACCESS_TOKEN_EXPIRE_MINUTES
+        exp=int(datetime.now().timestamp()) + settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
 
     resp_data = LoginResp(token=create_access_token(payload), expire=payload.exp)

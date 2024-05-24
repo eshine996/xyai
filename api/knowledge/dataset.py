@@ -1,14 +1,18 @@
 from fastapi import APIRouter, Query, Header, Depends
 from pydantic import BaseModel
+
+import crud
 from api.deps import SessionDep, TenantIdDep, CurrentUserDep
-from api.response import IResponse, ok_resp
-from model import User
+from api.response import IResponse, ok_resp, fail_resp
+from model import DatasetType
 
 router = APIRouter(tags=["知识库"])
 
 
 class Dataset(BaseModel):
     dataset_name: str
+    dataset_type: DatasetType
+    desc: str
 
 
 @router.post(path="/api/v1/dataset/create", summary="创建知识库")
@@ -18,8 +22,17 @@ def create_dataset(
         req: Dataset,
         session: SessionDep,
 ) -> IResponse:
-    # print(req.dataset_name)
-    # print(tenant_id)
+    try:
+        _dataset = crud.dataset.create_dataset(
+            tenant_id=tenant_id,
+            user_id=current_user.user_id,
+            dataset_name=req.dataset_name,
+            desc=req.desc,
+            dataset_type=1,
+            db_session=session
+        )
+    except Exception as e:
+        return fail_resp(msg="创建失败:" + str(e))
     return ok_resp()
 
 

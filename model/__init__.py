@@ -1,1 +1,1 @@
-from .model import User, Tenant
+from .model import *

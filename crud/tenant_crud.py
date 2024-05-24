@@ -14,7 +14,7 @@ class CRUDTenant(CRUDBase[Tenant]):
         _tenant = Tenant(
             tenant_id=tenant_id,
             tenant_name=tenant_name,
-            created_at=datetime.utcnow()
+            created_at=datetime.now()
         )
 
         db_session.add(_tenant)
