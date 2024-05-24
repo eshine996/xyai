@@ -1,5 +1,5 @@
 from crud.base_crud import CRUDBase
-from model import Dataset, DatasetType
+from model.dataset import Dataset, DatasetType
 from sqlmodel import Session
 from typing import Optional
 import uuid

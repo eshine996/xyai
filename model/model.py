@@ -1,8 +1,7 @@
-from sqlmodel import Field, SQLModel, Column
+from sqlmodel import Field, SQLModel
 from uuid import UUID
 from datetime import datetime
 import enum
-from sqlalchemy_utils import ChoiceType
 
 
 class DatasetType(enum.IntEnum):
@@ -23,14 +22,3 @@ class User(SQLModel, table=True):
     user_id: str = Field(primary_key=True)
     username: str
     password: str
-
-
-class Dataset(SQLModel, table=True):
-    tenant_id: UUID
-    user_id: UUID
-    dataset_id: UUID = Field(primary_key=True)
-    dataset_name: str
-    desc: str
-    dataset_type: DatasetType = Field(sa_column=Column(ChoiceType(DatasetType)))
-    created_at: datetime
-    deleted_at: datetime | None
