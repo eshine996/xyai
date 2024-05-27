@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 from typing import Optional, List
 import uuid
 from datetime import datetime
-from model.dataset import DatasetBase, Dataset, DatasetPublic
+from model.dataset import DatasetBase, Dataset, DatasetPublic, DatasetBackend
 from uuid import UUID
 
 
@@ -25,6 +25,7 @@ class CRUDDataset(CRUDBase[Dataset]):
             desc=dataset_base.desc,
             dataset_type=dataset_base.dataset_type,
             created_at=datetime.now(),
+            backend=DatasetBackend.Backend_XiaoYang
         )
 
         db_session.add(_dataset)
