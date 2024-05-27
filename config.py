@@ -46,8 +46,7 @@ class Settings(BaseSettings):
     MINIO_BUCKET_NAME: str = "xyai"
     # dify相关配置
     DIFY_DOMAIN: str
-    DIFY_USERNAME: str
-    DIFY_PASSWORD: str
+    DIFY_API_KEY: str
 
 
 settings = Settings()
