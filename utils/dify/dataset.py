@@ -1,9 +1,10 @@
 from uuid import UUID
 import requests
 import json
+from utils.dataset import DatasetBackend
 
 
-class DifyDataset:
+class DifyDatasetBackend(DatasetBackend):
     def __init__(self, endpoint: str, api_key: str):
         self.endpoint = endpoint
         self.api_key = api_key

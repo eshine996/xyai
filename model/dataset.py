@@ -11,7 +11,7 @@ class DatasetType(IntEnum):
     MeetingSet = 3  # 会议记录
 
 
-class DatasetBackend(IntEnum):
+class DatasetBackendType(IntEnum):
     Backend_XiaoYang = 1
     Backend_Dify = 2
 
@@ -24,7 +24,7 @@ class DatasetBase(SQLModel):
 
 class DatasetPublic(DatasetBase):
     dataset_id: UUID = Field(primary_key=True)
-    backend: DatasetBackend = Field(title="backend", sa_column=Column(ChoiceType(DatasetBackend)))
+    backend: DatasetBackendType = Field(title="backend", sa_column=Column(ChoiceType(DatasetBackendType)))
 
 
 class Dataset(DatasetPublic, TimeModel, table=True):
