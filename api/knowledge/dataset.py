@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query
 import crud
-from api.deps import SessionDep, TenantIdDep, CurrentUserDep
+from api.deps import SessionDep, TenantIdDep, CurrentUserDep, DatasetBackendDep
 from api.response import IResponse, ok_resp, fail_resp
 from model.dataset import DatasetBase, DatasetPublic
 from uuid import UUID
@@ -14,14 +14,16 @@ def create_dataset(
         current_user: CurrentUserDep,
         req: DatasetBase,
         db_session: SessionDep,
-        backend: str
+        dataset_backend: DatasetBackendDep
 ) -> IResponse:
+    dataset_id = dataset_backend.create_dataset(req.dataset_name)
     try:
         _dataset = crud.dataset.create_dataset(
             tenant_id=tenant_id,
             user_id=current_user.user_id,
             dataset_base=req,
-            db_session=db_session
+            db_session=db_session,
+            dataset_id=dataset_id
         )
     except Exception as e:
         return fail_resp(msg="失败:" + str(e))

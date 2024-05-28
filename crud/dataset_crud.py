@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 from typing import Optional, List
 import uuid
 from datetime import datetime
-from model.dataset import DatasetBase, Dataset, DatasetPublic, DatasetBackend
+from model.dataset import DatasetBase, Dataset, DatasetPublic, DatasetBackendType
 from uuid import UUID
 
 
@@ -14,18 +14,19 @@ class CRUDDataset(CRUDBase[Dataset]):
             tenant_id: UUID,
             user_id: UUID,
             dataset_base: DatasetBase,
-            db_session: Session
+            db_session: Session,
+            dataset_id: UUID = uuid.uuid4(),
     ) -> Optional[Dataset]:
         db_session = db_session or self.get_db_session()
         _dataset = Dataset(
             tenant_id=tenant_id,
             user_id=user_id,
-            dataset_id=uuid.uuid4(),
+            dataset_id=dataset_id,
             dataset_name=dataset_base.dataset_name,
             desc=dataset_base.desc,
             dataset_type=dataset_base.dataset_type,
             created_at=datetime.now(),
-            backend=DatasetBackend.Backend_XiaoYang
+            backend=DatasetBackendType.Backend_XiaoYang
         )
 
         db_session.add(_dataset)
