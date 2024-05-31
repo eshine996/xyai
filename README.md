@@ -1,9 +1,9 @@
 # xyai
-小羊AI
+晓羊AI
 
 # 启动项目
 ```shell
-uvicorn main:app 
+uvicorn main:agent 
 ```
 
 # 环境

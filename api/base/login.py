@@ -21,7 +21,7 @@ class LoginResp(BaseModel):
     expire: int = Field(..., title="过期时间")
 
 
-@router.post(path="/login", summary="账户密码登录")
+@router.post(path="/login/password", summary="账户密码登录")
 def login_by_password(db_session: SessionDep, req: LoginReq) -> IResponse[LoginResp]:
     user = crud.user.get_by_username(username=req.username, db_session=db_session)
     if not user:
@@ -38,6 +38,30 @@ def login_by_password(db_session: SessionDep, req: LoginReq) -> IResponse[LoginR
 
     resp_data = LoginResp(token=create_access_token(payload), expire=payload.exp)
     return ok_resp(data=resp_data)
+
+
+@router.post(path="/login/xy-platform", summary="通过小羊一体化平台登录")
+def login_by_xy_platform():
+    # todo
+    pass
+
+
+@router.post(path="/login/xy-pbm", summary="通过小羊pbm登录")
+def login_by_xy_pbm():
+    # todo
+    pass
+
+
+@router.post(path="/login/dingding", summary="通过钉钉登录")
+def login_by_dingding():
+    # todo
+    pass
+
+
+@router.post(path="/login/wechat", summary="通过wechat登录")
+def login_by_wechat():
+    # todo
+    pass
 
 
 class LoginUserInfo(BaseModel):

@@ -6,7 +6,7 @@ from api.knowledge import dataset, document
 from api.file import file
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="小羊AI")
+app = FastAPI(title="晓羊AI")
 
 app.add_middleware(
     CORSMiddleware,

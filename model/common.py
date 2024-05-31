@@ -4,4 +4,4 @@ from datetime import datetime
 
 class TimeModel(SQLModel):
     created_at: datetime
-    deleted_at: datetime | None = Field(default=None)
+    deleted_at: datetime
