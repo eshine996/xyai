@@ -9,7 +9,7 @@ router = APIRouter(tags=["智能体"])
 
 
 @router.get(path="/api/v1/agent/list", summary="获取智能体列表")
-def get_app_list(
+def get_agent_list(
         tenant_id: TenantIdDep,
         current_user: CurrentUserDep,
         db_session: SessionDep,
