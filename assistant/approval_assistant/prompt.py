@@ -33,8 +33,7 @@ ANSWER_PROMPT = PromptTemplate.from_template(
     SQL Result: {query_result}
     
     Pay attention to answer in Chinese!The data in 'SQL Query' or 'SQL Result' do not need to be translated into Chinese.
-    Pay attention to use COMMENT as a table header.
-    If you need a table display, please return it in markdown format.
-    Pay attention to use 'COMMENT' as a table header.
+    Pay attention to use tables as much as possible to display the data.
+    Pay attention to only use 'COMMENT' from 'Table Info' as a table header.
     """
 )
